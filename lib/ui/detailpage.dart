@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:missing_center/Logic/data/model/missingModel.dart';
 
 class DetailPage extends StatelessWidget {
+  final Missing missing;
+  DetailPage({Key key, @required this.missing}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,8 +25,13 @@ class DetailPage extends StatelessWidget {
                   padding: EdgeInsets.only(top: 20),
                   child: CircleAvatar(
                     radius: 100,
+                    child:
+                    Image.network(missing.image.toString() != null ?
+                    'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
+                        :missing.image.toString()),
                   ),
                 ),
+                Text(missing.name),
                 Padding(
                   padding: EdgeInsets.only(top: 290),
                   child: RaisedButton(

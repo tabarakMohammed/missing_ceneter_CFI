@@ -9,7 +9,6 @@ import 'dart:io';
 class UsersJob {
 
 
-
   // Future loadUsers() async {
   //   // var url = 'http://missing.test/api/auth/user';
   //   //
@@ -32,13 +31,12 @@ class UsersJob {
   // }
 
   Future<http.Response> createUsers(Users users) async {
-
     String usersToJson(Users data) {
       final prepareData = data.toJson();
       return convert.json.encode(prepareData);
     }
 
-   String url = "http://missing.test/api/auth/signup";
+    String url = "http://missing.test/api/auth/signup";
 
     final response = await http.post('$url',
         headers: {
@@ -52,15 +50,37 @@ class UsersJob {
 
 
 
+  Future<Users> getMissingByToken(String Token) async {
+    var url = 'http://missing.test/api/Missing/name=$Token';
+    Users _users;
+    try {
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        var jsonResponse = convert.jsonDecode(response.body);
+        _users = new Users.fromJson(jsonResponse);
+        return _users;
+      } else {
+        print('Request failed with status: ${response.statusCode}.');
+        return null;
+      }
+    } on SocketException {
+      Users error = new Users();
+      error.name = "SocketException";
+      error.email = "SocketException";
+      error.phone = "SocketException";
+      return error;
+    } on HttpException {
+      Users error = new Users();
+      error.name = "HttpException";
+      return error;
+    } on FormatException {
+      Users error = new Users();
+      error.name = "FormatException";
+      return error;
+    }
+  }
 
-// List<Post> allPostsFromJson(String str) {
-//   final jsonData = json.decode(str);
-//   return new List<Post>.from(jsonData.map((x) => Post.fromJson(x)));
-// }
 
 
-// Post postFromJson(String str) {
-//   final jsonData = json.decode(str);
-//   return Post.fromJson(jsonData);
-// }
+
 }

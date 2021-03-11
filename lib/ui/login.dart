@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:missing_center/Logic/business/Auth.dart';
 import 'package:missing_center/Logic/data/model/userModel.dart';
 import 'package:missing_center/ui/home.dart';
@@ -27,7 +28,19 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) => HomePage()), (
                 _) => false);
-     }
+     } else {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: "Error",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+        });
+      }
   }
 
   loginWithSocialMedia(String email,String password,String socialId) async {

@@ -1,4 +1,6 @@
 import 'package:missing_center/Logic/business/Auth.dart';
+import 'package:missing_center/Logic/business/homeMehtods.dart';
+import 'package:missing_center/Logic/data/model/missingModel.dart';
 import 'package:missing_center/ui/addmissing.dart';
 import 'package:missing_center/ui/detailpage.dart';
 import 'package:missing_center/ui/login.dart';
@@ -13,6 +15,8 @@ class HomePage extends StatefulWidget {
   }
 }
 
+
+
 class _HomePgeState extends State<HomePage> {
   TextEditingController _namemissingController = new TextEditingController();
   TextEditingController _dateController = new TextEditingController();
@@ -23,6 +27,38 @@ class _HomePgeState extends State<HomePage> {
 
 
   UserAuth userAuth = new UserAuth();
+  MissingJob ms = new MissingJob();
+  List<Missing> dataList = new List<Missing>();
+  Future<void> getMissing() async {
+    ms.getAllMissing().then((value) =>
+        setState(() {
+      dataList = value;
+      print("from set state" + dataList.length.toString());
+    })
+    );
+  }
+
+  Future<void> searchMissing(String missingName,String date, String ageSelected ,String conterySelected, String typeSelected)
+   async {
+     await  ms.getMissingBySearch
+       (missingName,ageSelected ,typeSelected , date, conterySelected).then((value) =>
+         setState(() {
+           dataList = value;
+         })
+
+     );
+
+
+     }
+
+  @override
+  void initState()  {
+    // TODO: implement initState
+    super.initState();
+    this.getMissing();
+  }
+
+
 
   void _shwosearchsheet() {
     showModalBottomSheet(
@@ -239,7 +275,7 @@ class _HomePgeState extends State<HomePage> {
                           DropdownMenuItem(
                               value: '0',
                               child: Text(
-                                'المحافظة                                         ',
+                                'المحافظة ',
                                 style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
@@ -394,7 +430,12 @@ class _HomePgeState extends State<HomePage> {
                     shape: new RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(30.0),
                     ),
-                    onPressed: () {},
+                    onPressed: ()  {
+                        searchMissing(_namemissingController.text.toString()
+                        ,_dateController.text.toString(),
+                        selectedage,selectedcontery,selectedtype);
+                        Navigator.pop(context);
+                        }
                   ),
                 ),
               ]));
@@ -636,188 +677,388 @@ class _HomePgeState extends State<HomePage> {
         ),
         body: Container(
           child:
-          ListView.builder(
-            itemBuilder: (_, int index) => HomeList(),
-            itemCount: 5,
-          ),
-        ));
-  }
-}
+            CustomScrollView(
+              slivers: <Widget>[
 
-class HomeList extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 20),
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(right: 15),
-                child: Container(
-                  color: Colors.white,
-                  height: 280,
-                  width: 180,
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 5),
-                        child: CircleAvatar(
-                          radius: 50,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 125),
-                        child: RaisedButton(
-                          child: Text(
-                            'التفاصيل',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          padding: EdgeInsets.only(top: 0),
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(20.0),
-                          ),
-                          color: Color(0xFF155E98),
-                          textColor: Colors.white,
-                          onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DetailPage())),
-                        ),
-                      )
-                    ],
+                SliverGrid(
+                  gridDelegate:
+                  SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200.0,
+                    mainAxisSpacing: 8.0,
+                    crossAxisSpacing: 8.0,
+                    childAspectRatio: 0.7,
+                  ),
+                    // SliverGridDelegateWithFixedCrossAxisCount(
+                    //  crossAxisCount: 2,
+                    //   ),
+
+                  delegate: SliverChildBuilderDelegate(
+
+                        (BuildContext context, int index) {
+                      return generalListView(dataList[index]);
+                    },
+                    childCount: dataList.length,
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 20),
-                child: Container(
-                  color: Colors.white,
-                  height: 280,
-                  width: 180,
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 5),
-                        child: CircleAvatar(
-                          radius: 50,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 125),
-                        child: RaisedButton(
-                          child: Text(
-                            'التفاصيل',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          padding: EdgeInsets.only(top: 0),
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(20.0),
-                          ),
-                          color: Color(0xFF155E98),
-                          textColor: Colors.white,
-                          onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DetailPage())),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 15, right: 15),
-                child: Container(
-                  color: Colors.white,
-                  height: 280,
-                  width: 180,
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 5),
-                        child: CircleAvatar(
-                          radius: 50,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 125),
-                        child: RaisedButton(
-                          child: Text(
-                            'التفاصيل',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          padding: EdgeInsets.only(top: 0),
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(20.0),
-                          ),
-                          color: Color(0xFF155E98),
-                          textColor: Colors.white,
-                          onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DetailPage())),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 15, right: 20),
-                child: Container(
-                  color: Colors.white,
-                  height: 280,
-                  width: 180,
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 5),
-                        child: CircleAvatar(
-                          radius: 50,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 125),
-                        child: RaisedButton(
-                          child: Text(
-                            'التفاصيل',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          padding: EdgeInsets.only(top: 0),
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(20.0),
-                          ),
-                          color: Color(0xFF155E98),
-                          textColor: Colors.white,
-                          onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DetailPage())),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+               ],
+
+            ),
+    // ListView.builder(
+          //   itemCount: dataList == null ? 1 : dataList.length,
+          //   itemBuilder: (BuildContext context, int index) {
+          //    if(index <= (dataList.length) ) {
+          //       int fIndex = index + index ;
+          //       int sIndex = fIndex + 1 ;
+          //       print(fIndex.toString() + dataList[fIndex].name);
+          //       print(sIndex.toString() + dataList[sIndex].name);
+          //       var rightItem = dataList[fIndex];
+          //       var leftItem = dataList[sIndex];
+          //       return generalListView(rightItem, leftItem);
+          //     } else {
+          //
+          //       return Text("Stop");
+          //
+          //     }
+          //   }
+          //),
+        ),
     );
   }
+
+
+  Widget generalListView(dataList){
+    return Container(
+       padding: EdgeInsets.only(top: 10),
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Padding(
+          padding: EdgeInsets.only(right: 15, left: 15),
+          child: Container(
+            color: Colors.white,
+            height: 280,
+            width: 180,
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: CircleAvatar(
+                    radius: 50,
+                    child:
+                    Image.network(dataList.image.toString() != null ?
+                        'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
+                    :dataList.image.toString()),
+                  ),
+                ),
+                Text(dataList.name),
+                Padding(
+                  padding: EdgeInsets.only(top: 80),
+                  child: RaisedButton(
+                    child: Text(
+                      "التفاصيل",
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    padding: EdgeInsets.only(top: 0),
+                    shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(20.0),
+                    ),
+                    color: Color(0xFF155E98),
+                    textColor: Colors.white,
+                     onPressed: () =>
+                         Navigator.push(
+                           context,
+                           MaterialPageRoute(
+                             builder: (context) => DetailPage(missing: dataList),
+                           ),
+                         ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+    );
+  }
+
+  // Widget generalListView(dataList, dataList2){
+  //
+  //   return Container(
+  //     padding: EdgeInsets.only(top: 20),
+  //     height: MediaQuery.of(context).size.height,
+  //     width: MediaQuery.of(context).size.width,
+  //     child: Column(
+  //       children: <Widget>[
+  //         Row(
+  //           children: <Widget>[
+  //             Padding(
+  //               padding: EdgeInsets.only(right: 15),
+  //               child: Container(
+  //                 color: Colors.white,
+  //                 height: 280,
+  //                 width: 180,
+  //                 child: Column(
+  //                   children: <Widget>[
+  //                     Padding(
+  //                       padding: EdgeInsets.only(top: 5),
+  //                       child: CircleAvatar(
+  //                         radius: 50,
+  //                       ),
+  //                     ),
+  //                     Padding(
+  //                       padding: EdgeInsets.only(top: 125),
+  //                       child: RaisedButton(
+  //                         child: Text(
+  //                           dataList.name,
+  //                           style: TextStyle(
+  //                               fontSize: 18, fontWeight: FontWeight.bold),
+  //                         ),
+  //                         padding: EdgeInsets.only(top: 0),
+  //                         shape: new RoundedRectangleBorder(
+  //                           borderRadius: new BorderRadius.circular(20.0),
+  //                         ),
+  //                         color: Color(0xFF155E98),
+  //                         textColor: Colors.white,
+  //                         onPressed: () => Navigator.push(
+  //                             context,
+  //                             MaterialPageRoute(
+  //                                 builder: (context) => DetailPage())),
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //
+  //             Padding(
+  //               padding: EdgeInsets.only(right: 20),
+  //               child: Container(
+  //                 color: Colors.white,
+  //                 height: 280,
+  //                 width: 180,
+  //                 child: Column(
+  //                   children: <Widget>[
+  //                     Padding(
+  //                       padding: EdgeInsets.only(top: 5),
+  //                       child: CircleAvatar(
+  //                         radius: 50,
+  //                       ),
+  //
+  //                     ),
+  //                     Padding(
+  //                       padding: EdgeInsets.only(top: 125),
+  //                       child: RaisedButton(
+  //                         child: Text(
+  //                           dataList2.name,
+  //                           style: TextStyle(
+  //                               fontSize: 18, fontWeight: FontWeight.bold),
+  //                         ),
+  //                         padding: EdgeInsets.only(top: 0),
+  //                         shape: new RoundedRectangleBorder(
+  //                           borderRadius: new BorderRadius.circular(20.0),
+  //                         ),
+  //                         color: Color(0xFF155E98),
+  //                         textColor: Colors.white,
+  //                         onPressed: () => Navigator.push(
+  //                             context,
+  //                             MaterialPageRoute(
+  //                                 builder: (context) => DetailPage())),
+  //                       ),
+  //                     )
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //
+  //       ],
+  //     ),
+  //   );
+  //
+  // }
+
+
+
 }
+
+
+
+// class HomeList extends StatelessWidget {
+//
+//   @override
+//   Widget build(BuildContext context) {
+//
+//     return Container(
+//       padding: EdgeInsets.only(top: 20),
+//       height: MediaQuery.of(context).size.height,
+//       width: MediaQuery.of(context).size.width,
+//       child: Column(
+//         children: <Widget>[
+//           Row(
+//             children: <Widget>[
+//               Padding(
+//                 padding: EdgeInsets.only(right: 15),
+//                 child: Container(
+//                   color: Colors.white,
+//                   height: 280,
+//                   width: 180,
+//                   child: Column(
+//                     children: <Widget>[
+//                       Padding(
+//                         padding: EdgeInsets.only(top: 5),
+//                         child: CircleAvatar(
+//                           radius: 50,
+//                         ),
+//                       ),
+//                       Padding(
+//                         padding: EdgeInsets.only(top: 125),
+//                         child: RaisedButton(
+//                           child: Text(
+//                             'التفاصيل',
+//                             style: TextStyle(
+//                                 fontSize: 18, fontWeight: FontWeight.bold),
+//                           ),
+//                           padding: EdgeInsets.only(top: 0),
+//                           shape: new RoundedRectangleBorder(
+//                             borderRadius: new BorderRadius.circular(20.0),
+//                           ),
+//                           color: Color(0xFF155E98),
+//                           textColor: Colors.white,
+//                           onPressed: () => Navigator.push(
+//                               context,
+//                               MaterialPageRoute(
+//                                   builder: (context) => DetailPage())),
+//                         ),
+//                       )
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//               Padding(
+//                 padding: EdgeInsets.only(right: 20),
+//                 child: Container(
+//                   color: Colors.white,
+//                   height: 280,
+//                   width: 180,
+//                   child: Column(
+//                     children: <Widget>[
+//                       Padding(
+//                         padding: EdgeInsets.only(top: 5),
+//                         child: CircleAvatar(
+//                           radius: 50,
+//                         ),
+//                       ),
+//                       Padding(
+//                         padding: EdgeInsets.only(top: 125),
+//                         child: RaisedButton(
+//                           child: Text(
+//                             'التفاصيل',
+//                             style: TextStyle(
+//                                 fontSize: 18, fontWeight: FontWeight.bold),
+//                           ),
+//                           padding: EdgeInsets.only(top: 0),
+//                           shape: new RoundedRectangleBorder(
+//                             borderRadius: new BorderRadius.circular(20.0),
+//                           ),
+//                           color: Color(0xFF155E98),
+//                           textColor: Colors.white,
+//                           onPressed: () => Navigator.push(
+//                               context,
+//                               MaterialPageRoute(
+//                                   builder: (context) => DetailPage())),
+//                         ),
+//                       )
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//           Row(
+//             children: <Widget>[
+//               Padding(
+//                 padding: EdgeInsets.only(top: 15, right: 15),
+//                 child: Container(
+//                   color: Colors.white,
+//                   height: 280,
+//                   width: 180,
+//                   child: Column(
+//                     children: <Widget>[
+//                       Padding(
+//                         padding: EdgeInsets.only(top: 5),
+//                         child: CircleAvatar(
+//                           radius: 50,
+//                         ),
+//                       ),
+//                       Padding(
+//                         padding: EdgeInsets.only(top: 125),
+//                         child: RaisedButton(
+//                           child: Text(
+//                             'التفاصيل',
+//                             style: TextStyle(
+//                                 fontSize: 18, fontWeight: FontWeight.bold),
+//                           ),
+//                           padding: EdgeInsets.only(top: 0),
+//                           shape: new RoundedRectangleBorder(
+//                             borderRadius: new BorderRadius.circular(20.0),
+//                           ),
+//                           color: Color(0xFF155E98),
+//                           textColor: Colors.white,
+//                           onPressed: () => Navigator.push(
+//                               context,
+//                               MaterialPageRoute(
+//                                   builder: (context) => DetailPage())),
+//                         ),
+//                       )
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//               Padding(
+//                 padding: EdgeInsets.only(top: 15, right: 20),
+//                 child: Container(
+//                   color: Colors.white,
+//                   height: 280,
+//                   width: 180,
+//                   child: Column(
+//                     children: <Widget>[
+//                       Padding(
+//                         padding: EdgeInsets.only(top: 5),
+//                         child: CircleAvatar(
+//                           radius: 50,
+//                         ),
+//                       ),
+//                       Padding(
+//                         padding: EdgeInsets.only(top: 125),
+//                         child: RaisedButton(
+//                           child: Text(
+//                             'التفاصيل',
+//                             style: TextStyle(
+//                                 fontSize: 18, fontWeight: FontWeight.bold),
+//                           ),
+//                           padding: EdgeInsets.only(top: 0),
+//                           shape: new RoundedRectangleBorder(
+//                             borderRadius: new BorderRadius.circular(20.0),
+//                           ),
+//                           color: Color(0xFF155E98),
+//                           textColor: Colors.white,
+//                           onPressed: () => Navigator.push(
+//                               context,
+//                               MaterialPageRoute(
+//                                   builder: (context) => DetailPage())),
+//                         ),
+//                       )
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 //Hero(
 //tag: ' Container',

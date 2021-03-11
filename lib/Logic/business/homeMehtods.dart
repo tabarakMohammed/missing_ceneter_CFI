@@ -109,26 +109,68 @@ class MissingJob {
 
 Future<List<Missing>> getAllMissing() async {
   var url = 'http://missing.test/api/Missing/all';
+  var lurl = 'http://www.google.com/as';
   var missingList  = new List<Missing>();
-  // Missing missingItem;
-  var response = await http.get(url);
-  if (response.statusCode == 200) {
-    var jsonResponse = convert.jsonDecode(response.body);
-    /*set loop */
-    for (var item in jsonResponse ) {
-      //missingItem = new Missing.fromJson(item);
-      missingList.add(Missing.fromJson(item));
-    }
-     return missingList;
-  } else {
-    print('Request failed with status: ${response.statusCode}.');
-    return null;
-  }
 
+      print("start");
+  try {
+
+    var response = await http.get(url);
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+
+      for (var item in jsonResponse) {
+        //missingItem = new Missing.fromJson(item);
+        missingList.add(Missing.fromJson(item));
+        print("ok");
+      }
+      return missingList;
+
+    } else {
+          print('Request failed with status: ${response.statusCode}.');
+          Missing empty = new Missing();
+          empty.name = "there its no data";
+          missingList.add(empty);
+          print("noop");
+          print(missingList[0].name);
+          return missingList;
+        }
+
+    }  on SocketException {
+          print('No Internet connection');
+          Missing empty = new Missing();
+          empty.name = "No Internet connection";
+          Missing empty2 = new Missing();
+          empty2.name = "No Internet connection";
+          Missing empty3 = new Missing();
+          empty3.name = "No Internet connection";
+          Missing empty4 = new Missing();
+          empty4.name = "No Internet connection";
+          missingList.add(empty);
+          missingList.add(empty2);
+          missingList.add(empty3);
+          //missingList.add(empty4);
+          return missingList;
+    } on HttpException {
+          print("Couldn't find the post ");
+          Missing empty = new Missing();
+          empty.name = "Couldn't find the post";
+          missingList.add(empty);
+          return missingList;
+    } on FormatException {
+          print("Bad response format ");
+          Missing empty = new Missing();
+          empty.name = "Bad response format";
+          missingList.add(empty);
+          return missingList;
+
+    }
 }
 
 
-  Future<Missing> getMissingBySearch(String name,int age,String gender, DateTime date, int governorateId) async {
+  Future<List<Missing>> getMissingBySearch(String name,String age,String gender, String date, String governorateId) async {
 
     /*Map<String,String> parameters = {
      'name': '$name',
@@ -141,37 +183,71 @@ Future<List<Missing>> getAllMissing() async {
    */
 
     var url = 'http://missing.test/api/Missing/name=$name&age=$age&gender=$gender&date=$date&governorateId=$governorateId';
-    Missing missingItem;
-    var response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body);
-        missingItem = new Missing.fromJson(jsonResponse);
-      return missingItem;
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
-      return null;
-    }
 
+    var missingList  = new List<Missing>();
+
+    try {
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+       var jsonResponse = convert.jsonDecode(response.body);
+       //  missingItem = new Missing.fromJson(jsonResponse);
+       for (var item in jsonResponse) {
+         missingList.add(Missing.fromJson(item));
+         print("ok");
+       }
+       return missingList;
+     } else {
+       print('Request failed with status: ${response.statusCode}.');
+       Missing error = new Missing();
+       error.name = "SocketException";
+       missingList.add(error);
+       return missingList;
+     }
+   } on SocketException {
+     Missing error = new Missing();
+     error.name = "SocketException";
+     missingList.add(error);
+     return missingList;
+   } on HttpException{
+     Missing error  = new Missing();
+     error.name = "HttpException";
+     missingList.add(error);
+     return missingList;
+   } on FormatException{
+     Missing error  = new Missing();
+     error.name = "FormatException";
+     missingList.add(error);
+     return missingList;
+   }
   }
 
 
 
-  Future<Missing> getMissingById(int id) async {
-    var url = 'http://missing.test/api/Missing/name=$id';
-    Missing missingItem;
-    var response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body);
-      missingItem = new Missing.fromJson(jsonResponse);
-      return missingItem;
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
-      return null;
-    }
-
-  }
-
-
+  // Future<Missing> getMissingByToken(String  Token) async {
+  //   var url = 'http://missing.test/api/Missing/name=$Token';
+  //   Missing missingItem;
+  //   try {
+  //     var response = await http.get(url);
+  //     if (response.statusCode == 200) {
+  //       var jsonResponse = convert.jsonDecode(response.body);
+  //       missingItem = new Missing.fromJson(jsonResponse);
+  //       return missingItem;
+  //     } else {
+  //       print('Request failed with status: ${response.statusCode}.');
+  //       return null;
+  //     }
+  //   } on SocketException {
+  //         Missing error = new Missing();
+  //         error.name = "SocketException";
+  //         return error;
+  //      } on HttpException{
+  //         Missing error  = new Missing();
+  //         error.name = "HttpException";
+  //         return error;
+  //       } on FormatException{
+  //         Missing error  = new Missing();
+  //         error.name = "FormatException";
+  //         return error;
 
 
 }

@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async' show Future;
 import 'package:missing_center/Logic/data/model/userModel.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert'as convert;
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,8 +36,6 @@ class UserAuth {
 
 
   Future<http.Response> createUsers(Users users) async {
-
-
 
     String usersToJson(Users data) {
       final prepareData = data.toJson();
@@ -82,14 +78,41 @@ class UserAuth {
 
     String usersToJson(Users data) {
 
+
       print("my user method || --" + data.email);
 
-      final prepareData = data.toJson();
+      final prepareData = data.logInToJson();
       return convert.json.encode(prepareData);
     }
 
+    // String url = "http://missing.test/api/auth/signin";
+    // try {
+    //   final response = await http.post('$url',
+    //       headers: {
+    //         HttpHeaders.contentTypeHeader: 'application/json',
+    //         HttpHeaders.authorizationHeader: ''
+    //       },
+    //       body: usersToJson(users)
+    //   );
+    //   _sharedToken(response.body);
+    //   return response;
+    // }
+    // on SocketException {
+    //   print('No Internet connection ');
+    //   return null;
+    // } on HttpException {
+    //   print("Couldn't find the post ");
+    //   return null;
+    // } on FormatException {
+    //   print("Bad response format ");
+    //   return null;
+    // }
+    //
+
+
+
     _sharedToken("good");
-    print("my user method" +usersToJson(users));
+    print("my user method" + usersToJson(users));
 
     return "good";
 
@@ -113,4 +136,9 @@ class UserAuth {
     return "good";
 
   }
+
+
+
+
+
 }

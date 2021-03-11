@@ -48,5 +48,15 @@ class Users{
   };
 
 
+  Map<String, dynamic> logInToJson() => {
+    // "name": name,
+    // "phone": phone,
+    "email": email,
+    "password":password,
+    // "image": image,
+    // "social_id":socialId
+  };
+
+
 
 }
