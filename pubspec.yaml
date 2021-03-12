@@ -62,7 +62,7 @@ flutter:
      - images/muhammed.jpg
      - images/gallery.png
      - images/Take_photo.png
-
+     - images/tabarek.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

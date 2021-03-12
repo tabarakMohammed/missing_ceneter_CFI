@@ -14,7 +14,7 @@ class WhoWe extends StatelessWidget {
           Stack(children: <Widget>[
             Container(
               width: MediaQuery.of(context).size.width,
-              height: 800,
+              height: 970,
               decoration: BoxDecoration(
                 gradient: RadialGradient(
                     colors: [
@@ -158,8 +158,42 @@ class WhoWe extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: Colors.white)),
             ),
+            Row(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 815, right: 20),
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundImage: AssetImage('images/tabarek.jpg'),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 795, right: 20),
+                  child: Text('تبارك محمد',
+                      style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange)),
+                ),
+              ],
+            ),
             Padding(
-              padding: EdgeInsets.only(top: 800, right: 160),
+                padding: EdgeInsets.only(top: 870, right: 100),
+                child: Text('tabarek.mohammed@codeforiraq.org',
+                    style: TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black))),
+            Padding(
+              padding: EdgeInsets.only(top: 915, right: 30),
+              child: Text('تحديث و تطوير',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 1000, right: 160),
               child: Text('اتصل بنا',
                   style: TextStyle(
                       fontSize: 30,
@@ -167,12 +201,12 @@ class WhoWe extends StatelessWidget {
                       color: Color(0xFF1875BC))),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 860, right: 90),
+              padding: EdgeInsets.only(top: 1050, right: 90),
               child: Text('info@codeforiraq.org',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 900, right: 90),
+              padding: EdgeInsets.only(top: 1090, right: 90),
               child: Text('www.codeforiraq.org',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
             ),
